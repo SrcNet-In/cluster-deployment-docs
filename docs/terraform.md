@@ -1,6 +1,6 @@
 ## Terraform scripts
 
-### Software discovery service Infrastructure
+### Software discovery service
 
 ```bash
 # Navigate to the terraform/software-discovery directory
