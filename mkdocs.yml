@@ -1,0 +1,69 @@
+site_name: Cluster Deployment Documentation
+site_url: https://srcnet-in.github.io/cluster-deployment-docs/
+
+nav:
+  - Home: index.md
+  - terrform: terraform.md
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+      primary: teal
+      accent: purple 
+    - scheme: slate 
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode    
+      primary: teal
+      accent: lime
+
+plugins:
+  - social
+  - search
+  - mkdocs-pdf
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/srcnet-in
+    - icon: fontawesome/brands/twitter
+      link: https://github.com/srcnet-in
+    - icon: fontawesome/brands/linkedin
+      link: https://github.com/srcnet-in
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.mark
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+
+copyright: |
+  &copy; 2025 <a href="https://srcnet-in.github.io"  target="_blank" rel="noopener">SRC Net Indigo Team</a>

@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  cluster-deployment-docs:
+    container_name: cluster-deployment-docs
+    image: cluster-deployment-docs:latest
+    build:
+      context: .  # Set the build context to the docs directory
+    ports:
+      - "8000:8000"
+    # volume mount so that it will get the local changes automatically
+    volumes:
+      - ./:/home/srcnet-in/workspace/cluster-deployment-docs  # Mounts the local docs directory to /docs in the container
