@@ -5,6 +5,9 @@ nav:
   - Home: index.md
   - terrform: terraform.md
   - kepler: kepler.md
+  - gateway-api: gateway-api.md
+  - observability: observability.md
+  - logging: logging.md
 
 theme:
   name: material
