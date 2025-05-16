@@ -65,7 +65,7 @@ In the context of Kepler, eBPF is used to collect fine-grained power consumption
 
 ### Kepler Architecture
 
-![Kepler Architecture](../assets/images/kepler-arch.png)
+![Kepler Architecture](./assets/images/kepler-arch.png)
 
 _Source: [https://sustainable-computing.io/design/architecture/](https://sustainable-computing.io/design/architecture/)_
 
