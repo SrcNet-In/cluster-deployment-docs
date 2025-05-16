@@ -4,6 +4,7 @@ site_url: https://srcnet-in.github.io/cluster-deployment-docs/
 nav:
   - Home: index.md
   - terrform: terraform.md
+  - kepler: kepler.md
 
 theme:
   name: material
