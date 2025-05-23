@@ -265,8 +265,11 @@ spec:
             type: PathPrefix
             value: /skaha
 ```
+
 ---
+
 ### STEP 4: Create a Gateway for Harbor and attach the GatewayClass created in STEP 1.
+
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -300,8 +303,11 @@ spec:
           name: harbor-gateway-tls
         # The TLS configuration references a Secret containing the TLS certificate.
 ```
+
 ---
+
 ### STEP 5: Create an HTTPRoute for the services in Harbor and attach it to the Gateway created in STEP 4.
+
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
