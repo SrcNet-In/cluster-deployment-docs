@@ -1,6 +1,7 @@
 # Gateway API
 
 ## Premise
+
 To be generally available, web applications running on Kubernetes need to be exposed outside the cluster. This can be achieved in a number of ways.
 
 The easiest way to expose a service or API endpoint outside a Kubernetes cluster is to assign a service type of `NodePort`. The drawback of this approach is that the service runs on a non-standard port number. Also, each cluster has a finite number of ports assigned to its NodePort pool.
@@ -53,8 +54,8 @@ The following design goals drive the concepts of Gateway API and demonstrate how
 - **Route Resources**: Protocol-specific rules for mapping requests from a Gateway to Kubernetes Services:
   - `HTTPRoute`: Multiplexing HTTP or terminated HTTPS connections.
   - `GRPCRoute`: Routing gRPC traffic.
-  - `TLSRoute` *(experimental)*: Multiplexing TLS connections via SNI.
-  - `TCPRoute` and `UDPRoute` *(experimental)*: Mapping TCP/UDP ports to backends. May terminate TLS where appropriate.
+  - `TLSRoute` _(experimental)_: Multiplexing TLS connections via SNI.
+  - `TCPRoute` and `UDPRoute` _(experimental)_: Mapping TCP/UDP ports to backends. May terminate TLS where appropriate.
 
 ### Gateway API resource organisation
 
@@ -97,16 +98,16 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: canfar.e4r.internal
-    http:
-      paths:
-      - path: /science-portal
-        pathType: Prefix
-        backend:
-          service:
-            name: science-portal-tomcat-svc
-            port:
-              number: 8080
+    - host: canfar.e4r.internal
+      http:
+        paths:
+          - path: /science-portal
+            pathType: Prefix
+            backend:
+              service:
+                name: science-portal-tomcat-svc
+                port:
+                  number: 8080
 ```
 
 ---
@@ -128,24 +129,24 @@ metadata:
 spec:
   gatewayClassName: envoy-gateway-class
   listeners:
-  - name: canfar-gateway-http-envoy
-    protocol: HTTP
-    port: 80
-    allowedRoutes:
-      namespaces:
-        from: All 
-  - name: canfar-gateway-https-envoy
-    protocol: HTTPS
-    port: 443
-    allowedRoutes:
-      namespaces:
-        from: All 
-    hostname: "canfar.e4r.internal"
-    tls:
-      certificateRefs:
-      - kind: Secret
-        group: ""
-        name: canfar-gateway-tls
+    - name: canfar-gateway-http-envoy
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: canfar-gateway-https-envoy
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: All
+      hostname: "canfar.e4r.internal"
+      tls:
+        certificateRefs:
+          - kind: Secret
+            group: ""
+            name: canfar-gateway-tls
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -199,24 +200,24 @@ metadata:
 spec:
   gatewayClassName: envoy-gateway-class
   listeners:
-  - name: canfar-gateway-http-envoy
-    protocol: HTTP
-    port: 80
-    allowedRoutes:
-      namespaces:
-        from: All
-  - name: canfar-gateway-https-envoy
-    protocol: HTTPS
-    port: 443
-    allowedRoutes:
-      namespaces:
-        from: All
-    hostname: "canfar.e4r.internal"
-    tls:
-      certificateRefs:
-        - kind: Secret
-          group: ""
-          name: canfar-gateway-tls
+    - name: canfar-gateway-http-envoy
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: canfar-gateway-https-envoy
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: All
+      hostname: "canfar.e4r.internal"
+      tls:
+        certificateRefs:
+          - kind: Secret
+            group: ""
+            name: canfar-gateway-tls
 ```
 
 ---
@@ -279,29 +280,29 @@ spec:
   gatewayClassName: envoy-gateway-class
   # The same GatewayClass is used for Harbor.
   listeners:
-  - name: harbor-gateway-http-envoy
-    protocol: HTTP
-    port: 80
-    allowedRoutes:
-      namespaces:
-        from: All
-    # This listener will accept HTTP traffic on port 80 from any namespace.
+    - name: harbor-gateway-http-envoy
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+      # This listener will accept HTTP traffic on port 80 from any namespace.
 
-  - name: harbor-gateway-https-envoy
-    protocol: HTTPS
-    port: 443
-    allowedRoutes:
-      namespaces:
-        from: All
-    # This listener will accept HTTPS traffic on port 443 from any namespace.
-    hostname: "harbor.e4r.internal"
-    # Define a hostname for the Harbor gateway.
-    tls:
-      certificateRefs:
-        - kind: Secret
-          group: ""
-          name: harbor-gateway-tls
-        # The TLS configuration references a Secret containing the TLS certificate.
+    - name: harbor-gateway-https-envoy
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: All
+      # This listener will accept HTTPS traffic on port 443 from any namespace.
+      hostname: "harbor.e4r.internal"
+      # Define a hostname for the Harbor gateway.
+      tls:
+        certificateRefs:
+          - kind: Secret
+            group: ""
+            name: harbor-gateway-tls
+          # The TLS configuration references a Secret containing the TLS certificate.
 ```
 
 ---
@@ -369,6 +370,7 @@ spec:
 ```
 
 ## Reference Resources
+
 - [https://gateway-api.sigs.k8s.io/guides/migrating-from-ingress/#reasons-to-switch-to-gateway-api](https://gateway-api.sigs.k8s.io/guides/migrating-from-ingress/#reasons-to-switch-to-gateway-api)
 - [https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api](https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api)
 - [https://gateway-api.sigs.k8s.io/guides/simple-gateway/](https://gateway-api.sigs.k8s.io/guides/simple-gateway/)
