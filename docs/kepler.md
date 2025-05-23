@@ -15,15 +15,15 @@ Kepler uses different methods to collect power data and share it through Prometh
 
 ### Requirements
 
-| Component            | Requirement                                                                                  |
-| -------------------- | -------------------------------------------------------------------------------------------- |
-| **Linux Kernel**     | `>= 5.12` (eBPF features used by Kepler require a modern kernel version)                      |
-| **eBPF Programs**    | - Must run in **privileged containers**                                                      |
-|                      | - Requires **CAP_SYS_ADMIN**, **CAP_BPF** capabilities                                       |
+| Component            | Requirement                                                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Linux Kernel**     | `>= 5.12` (eBPF features used by Kepler require a modern kernel version)                                                 |
+| **eBPF Programs**    | - Must run in **privileged containers**                                                                                  |
+|                      | - Requires **CAP_SYS_ADMIN**, **CAP_BPF** capabilities                                                                   |
 | **Metrics Exporter** | Needs a `ClusterRole` and `RoleBinding` with `get`, `list`, and `watch` on pods, nodes/metrics, nodes/proxy, nodes/stats |
-| **Prometheus**       | Prometheus must be configured to scrape Kepler metrics via `ServiceMonitor` |
-| **Grafana**          | Prometheus configured as data source                                               |
-| **Helm**             | Helm v3 for deploying Kepler and Prometheus stack                                           |
+| **Prometheus**       | Prometheus must be configured to scrape Kepler metrics via `ServiceMonitor`                                              |
+| **Grafana**          | Prometheus configured as data source                                                                                     |
+| **Helm**             | Helm v3 for deploying Kepler and Prometheus stack                                                                        |
 
 ### Data Collection Methods
 

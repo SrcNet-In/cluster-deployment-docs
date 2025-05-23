@@ -14,7 +14,7 @@ This guide walks you through deploying **Grafana Loki** for log aggregation and 
 
 ## Loki Installation (Monolithic Mode)
 
-We will install Loki in **monolithic mode** for this example, which is simpler and ideal for small to medium clusters. 
+We will install Loki in **monolithic mode** for this example, which is simpler and ideal for small to medium clusters.
 
 ### 1. Create Namespace
 
@@ -52,7 +52,7 @@ loki:
           prefix: loki_index_
           period: 24h
   pattern_ingester:
-      enabled: true
+    enabled: true
   limits_config:
     allow_structured_metadata: true
     volume_enabled: true
@@ -109,15 +109,15 @@ Loki supports three modes:
 2. **Simple Scalable**: Components like ingester, querier, etc., are split out but share a single process per replica.
 3. **Microservices Mode**: Full separation of components (e.g., distributor, ingester, querier). Ideal for large-scale clusters.
 
-| Feature                      | **Monolithic (SingleBinary)**                   | **Simple Scalable**                          | **Microservices Mode**                          |
-|------------------------------|-------------------------------------------------|---------------------------------------------|-------------------------------------------------|
-| **Description**               | All components run as a single binary process.   | Components like ingester, querier, etc. are separated into individual components but still share a single process per replica. | Full separation of components (e.g., distributor, ingester, querier). Each component runs as a separate service. |
-| **Ideal Use Case**            | Small to medium clusters, development, or staging environments. | Medium-scale clusters with moderate scalability needs. | Large-scale, high-traffic environments with high availability needs. |
-| **Scalability**               | Limited scalability (all components are together in a single process). | Can scale individual components (e.g., querier, ingester) independently. | Highly scalable, full independent scaling of each component. |
-| **Operational Complexity**    | Low, easy to deploy and manage.                  | Moderate, needs separate management for individual components. | High, each component must be managed and scaled independently. |
-| **Fault Tolerance**           | Single point of failure (if the binary fails, everything fails). | Better fault tolerance than monolithic (individual components can fail without taking down the entire system). | High fault tolerance, as failure in one component does not affect others. |
-| **Resource Efficiency**       | More resource-efficient as it uses a single process. | More resource-intensive as individual components run in separate processes. | Most resource-intensive, as each component has its own resources and scaling. |
-| **Ideal For**                 | Small-scale setups, testing, or development environments. | Medium-scale setups requiring some scalability but avoiding full microservices complexity. | Large-scale production environments requiring high resilience, scalability, and fault tolerance. |
+| Feature                    | **Monolithic (SingleBinary)**                                          | **Simple Scalable**                                                                                                            | **Microservices Mode**                                                                                           |
+| -------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| **Description**            | All components run as a single binary process.                         | Components like ingester, querier, etc. are separated into individual components but still share a single process per replica. | Full separation of components (e.g., distributor, ingester, querier). Each component runs as a separate service. |
+| **Ideal Use Case**         | Small to medium clusters, development, or staging environments.        | Medium-scale clusters with moderate scalability needs.                                                                         | Large-scale, high-traffic environments with high availability needs.                                             |
+| **Scalability**            | Limited scalability (all components are together in a single process). | Can scale individual components (e.g., querier, ingester) independently.                                                       | Highly scalable, full independent scaling of each component.                                                     |
+| **Operational Complexity** | Low, easy to deploy and manage.                                        | Moderate, needs separate management for individual components.                                                                 | High, each component must be managed and scaled independently.                                                   |
+| **Fault Tolerance**        | Single point of failure (if the binary fails, everything fails).       | Better fault tolerance than monolithic (individual components can fail without taking down the entire system).                 | High fault tolerance, as failure in one component does not affect others.                                        |
+| **Resource Efficiency**    | More resource-efficient as it uses a single process.                   | More resource-intensive as individual components run in separate processes.                                                    | Most resource-intensive, as each component has its own resources and scaling.                                    |
+| **Ideal For**              | Small-scale setups, testing, or development environments.              | Medium-scale setups requiring some scalability but avoiding full microservices complexity.                                     | Large-scale production environments requiring high resilience, scalability, and fault tolerance.                 |
 
 For more details on deployment modes, [see the Loki deployment modes documentation](https://grafana.com/docs/loki/latest/get-started/deployment-modes/).
 
@@ -201,6 +201,7 @@ alloy:
         forward_to = [loki.write.default.receiver]
       }
 ```
+
 ---
 
 ## Install Alloy with Helm
@@ -208,6 +209,7 @@ alloy:
 ```bash
 helm install alloy grafana/alloy -n monitoring -f values.yaml
 ```
+
 ---
 
 ## Add Loki as a Data Source in Grafana
@@ -229,9 +231,8 @@ Loki can use object storage like:
 - **Google Cloud Storage (GCS)**
 - **Azure Blob**
 
+#### Example: Store Logs in Amazon S3 with a 60-Day Retention Period
 
-####  Example: Store Logs in Amazon S3 with a 60-Day Retention Period
- 
 ```yaml
 loki:
   auth_enabled: false
@@ -245,7 +246,7 @@ loki:
         schema: v13
         index:
           prefix: loki_index_
-          period: 24h  
+          period: 24h
   storage_config:
     aws:
       s3: s3://access_key:secret_key@region/bucket_name
@@ -253,11 +254,11 @@ loki:
   limits_config:
     allow_structured_metadata: true
     volume_enabled: true
-    retention_period: 1440h       # 60 days
+    retention_period: 1440h # 60 days
   compactor:
     enabled: true
     retention_enabled: true
-    compaction_interval: 10m 
+    compaction_interval: 10m
     shared_store: s3
   ruler:
     enable_api: true
@@ -289,7 +290,9 @@ bloomCompactor:
 bloomGateway:
   replicas: 0
 ```
+
 #### Sample Amazon S3 lifecycle policy
+
 ```hcl
 {
   "Rules": [
@@ -310,7 +313,9 @@ bloomGateway:
   ]
 }
 ```
+
 #### Storage & Retrieval Sequence
+
 - **Day 0 – Ingestion & Initial S3 Upload**  
   Loki writes each new log as a TSDB chunk + index file and **immediately** pushes them into your S3 bucket.
 
@@ -321,23 +326,23 @@ bloomGateway:
   The Loki Compactor scans for data older than 60 days and **drops its index pointers** so those logs no longer appear in Grafana queries—but **does not** delete the S3/Glacier objects.
 
 - **Optional: Day 120 – S3 Permanent Deletion**  
-  *(Skip this if you want to retain data in Glacier forever.)*  
+  _(Skip this if you want to retain data in Glacier forever.)_  
   A second S3 rule can expire (delete) Glacier objects after e.g. 120 days—otherwise they remain indefinitely.
 
 - **Restoring & Re-ingesting Old Logs (e.g., 3 Years Later)**
-  1. **Glacier Restore → S3**  
+  1. **Glacier Restore → S3**
   2. **Download Restored Files Locally**
-      ```bash
-      aws s3 sync s3://my-loki-bucket/chunks/ ./local-chunks/ --recursive --include="*.chunk" --force-glacier-transfer
-      aws s3 sync s3://my-loki-bucket/index/ ./local-index/ --recursive --include="*.index" --force-glacier-transfer
-     ```  
+     ```bash
+     aws s3 sync s3://my-loki-bucket/chunks/ ./local-chunks/ --recursive --include="*.chunk" --force-glacier-transfer
+     aws s3 sync s3://my-loki-bucket/index/ ./local-index/ --recursive --include="*.index" --force-glacier-transfer
+     ```
   3. **Decode TSDB Chunks to Plain Logs**  
-     Use Prometheus’s built-in tool:  
+     Use Prometheus’s built-in tool:
      ```bash
      promtool tsdb dump \
        --block-dir=./local-chunks/<block-id> \
        --output=./extracted-logs/<block-id>.txt
-     ```  
+     ```
   4. **Prepare Alloy Replay Config**  
      Mount `./extracted-logs/` into your Alloy pod, then modify grafana config:
      ```hcl
@@ -353,16 +358,13 @@ bloomGateway:
        timeout  = "30s"
      }
      ```
-  5. **Deploy Alloy & Replay**  
-  6. **Query in Grafana**  
-
+  5. **Deploy Alloy & Replay**
+  6. **Query in Grafana**
 
 > **Compression**: Loki **automatically compresses logs using Snappy** before storing them in object storage.
-For more details [Loki Snappy Compression Algorithm](https://grafana.com/docs/enterprise-logs/latest/config/bp-configure/#use-snappy-compression-algorithm).
-
+> For more details [Loki Snappy Compression Algorithm](https://grafana.com/docs/enterprise-logs/latest/config/bp-configure/#use-snappy-compression-algorithm).
 
 ---
-
 
 ## References
 

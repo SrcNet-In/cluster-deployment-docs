@@ -1,29 +1,29 @@
-
 # **Kubernetes Observability Tooling**
 
-#  **Tech Stack**
+# **Tech Stack**
 
-In our POC implementation for Kubernetes observability tooling for SRCNET Nodes, we have opted for the PLG stack—comprising of **Prometheus**, **Loki**, and **Grafana**—over the ELK stack (ElasticSearch, Logstash, and Kibana). 
+In our POC implementation for Kubernetes observability tooling for SRCNET Nodes, we have opted for the PLG stack—comprising of **Prometheus**, **Loki**, and **Grafana**—over the ELK stack (ElasticSearch, Logstash, and Kibana).
 
 This stack offers the following features:
+
 1. **Kubernetes Native**: The PLG stack is inherently designed for Kubernetes environments, offering seamless integration with Kubernetes-based workloads and configurations. This makes it a more natural choice for our observability needs within a Kubernetes cluster.
 
 2. **Simple and Efficient**: The PLG stack is known for its simplicity in setup and operation, while also being highly efficient in handling large volumes of data. It provides a streamlined approach to monitoring and logging, reducing complexity compared to the more generalized ELK stack.
 
 3. **Scalable**: PLG is designed with scalability in mind, which is crucial for managing large-scale Kubernetes deployments. As our observability needs grow, PLG's architecture can easily scale to accommodate increased traffic and data volume.
 
-4. **Performent and Easy to Maintenance**: In addition to its ease of use, the PLG stack offers high performance and low resource consumption, making it a better fit. 
+4. **Performent and Easy to Maintenance**: In addition to its ease of use, the PLG stack offers high performance and low resource consumption, making it a better fit.
 
-### **List of Tools** 
+### **List of Tools**
 
-1. Grafana  
-2. Prometheus   
-3. Loki  
-4. Alloy  
-5. Tempo  
+1. Grafana
+2. Prometheus
+3. Loki
+4. Alloy
+5. Tempo
 6. OpenTelemetry Collector
 
-### **Grafana** 
+### **Grafana**
 
 Grafana is an open-source tool used to create visual dashboards for monitoring and analyzing data. It connects to various data sources like Prometheus, Loki and helps you to visualize metrics in real-time. Grafana makes it easy to track performance and identify issues with interactive charts and graphs.
 
@@ -51,16 +51,16 @@ The OpenTelemetry Collector is a vendor-agnostic tool designed to receive, proce
 
 To set up the observability stack for SRCNodes, which includes Grafana, Prometheus, Loki, Tempo, Alloy, and OpenTelemetry Collector, ensure that the following hardware and software prerequisites are met.
 
-### **Hardware Requirements** 
+### **Hardware Requirements**
 
 **CPU:** Minimum of 2 cores per node.​  
 **Memory:** At least 2 GB of RAM per node  
-**Storage:** 20 GB of free disk space per node.  
- 
-\*  Prometheus and Loki will require disk space for storing time-series metrics and logs when they are stored locally instead of cloud services like S3 or GCS.  
-\*  Tempo may also require significant storage depending on the retention period for traces.
+**Storage:** 20 GB of free disk space per node.
 
-### **Software Requirements** 
+\* Prometheus and Loki will require disk space for storing time-series metrics and logs when they are stored locally instead of cloud services like S3 or GCS.  
+\* Tempo may also require significant storage depending on the retention period for traces.
+
+### **Software Requirements**
 
 **Kubernetes:** 1.19 (or later)
 
@@ -78,18 +78,19 @@ In our POC environment, we created two namespaces:
 
 The observability stack fullfills three requirments:
 
-* **Metrics Collection**: Metrics are fetched from **Prometheus** and visualized in **Grafana**.  
-* **Log Aggregation**: Logs are gathered by **Loki** and displayed in **Grafana**.  
-* **Distributed Tracing**: Traces are collected from **Tempo** and rendered in **Grafana**.
+- **Metrics Collection**: Metrics are fetched from **Prometheus** and visualized in **Grafana**.
+- **Log Aggregation**: Logs are gathered by **Loki** and displayed in **Grafana**.
+- **Distributed Tracing**: Traces are collected from **Tempo** and rendered in **Grafana**.
 
-### **Metrics Collection** 	
-To capture metrics from services into Prometheus, there are several approaches. One method used in this architecture is **Prometheus client integration**. 
+### **Metrics Collection**
+
+To capture metrics from services into Prometheus, there are several approaches. One method used in this architecture is **Prometheus client integration**.
 The process involves the following steps:
 
-1. **Install Prometheus Client**: The Prometheus client is installed within the service.  
-2. **Configure Metrics and Endpoint**: The client is configured to collect the desired metrics and expose them via a dedicated endpoint.  
-3. **ServiceMonitor Creation**: A ServiceMonitor resource is created to enable Prometheus to scrape the metrics at regular intervals.  
-4. **Data Storage**: The collected metrics are stored in a Persistent Volume Claim (PVC) for durability.  
+1. **Install Prometheus Client**: The Prometheus client is installed within the service.
+2. **Configure Metrics and Endpoint**: The client is configured to collect the desired metrics and expose them via a dedicated endpoint.
+3. **ServiceMonitor Creation**: A ServiceMonitor resource is created to enable Prometheus to scrape the metrics at regular intervals.
+4. **Data Storage**: The collected metrics are stored in a Persistent Volume Claim (PVC) for durability.
 5. **Grafana Integration**: Prometheus is added as a data source to **Grafana**, which visualizes and presents the metrics.
 
 With this setup, Prometheus continuously scrapes the metrics from the service, and Grafana allows for real-time visualization of the data.
@@ -98,10 +99,10 @@ With this setup, Prometheus continuously scrapes the metrics from the service, a
 
 To capture logs from services running within our Kubernetes cluster, we utilize **Grafana Alloy** in conjunction with **Loki** and **Grafana** for efficient log aggregation and visualization. The log collection and visualization process is as follows:
 
-1. **Deploy Grafana Alloy**: Grafana Alloy is installed within the Kubernetes cluster to collect logs from the pods. It offers flexibility in log collection methods, including using the Kubernetes API to tail logs without requiring a DaemonSet  
-2. **Configure Log Collection**: Alloy is configured to collect logs from specific pods or namespaces. This configuration involves setting up the appropriate components within Alloy to discover and tail logs from the desired sources.  
-3. **Forward Logs to Loki**: The collected logs are forwarded to **Loki**, a log aggregation system designed for scalability and efficiency. Alloy's loki.write component handles the delivery of logs to Loki endpoints.  
-4. **Store Logs in Loki**: Loki stores the logs in an object storage system or persistent volume, ensuring durability and facilitating efficient querying.  
+1. **Deploy Grafana Alloy**: Grafana Alloy is installed within the Kubernetes cluster to collect logs from the pods. It offers flexibility in log collection methods, including using the Kubernetes API to tail logs without requiring a DaemonSet
+2. **Configure Log Collection**: Alloy is configured to collect logs from specific pods or namespaces. This configuration involves setting up the appropriate components within Alloy to discover and tail logs from the desired sources.
+3. **Forward Logs to Loki**: The collected logs are forwarded to **Loki**, a log aggregation system designed for scalability and efficiency. Alloy's loki.write component handles the delivery of logs to Loki endpoints.
+4. **Store Logs in Loki**: Loki stores the logs in an object storage system or persistent volume, ensuring durability and facilitating efficient querying.
 5. **Visualize Logs in Grafana**: **Grafana** is configured to use Loki as a data source. This setup allows for the creation of dynamic dashboards and the execution of queries to analyze and visualize log data in real-time.
 
 ### **Distributed Tracing**
@@ -110,14 +111,12 @@ To implement distributed tracing within our Kubernetes environment, we utilize *
 
 1. **Instrument Services with OpenTelemetry SDKs**: Each service in the Services Namespace is instrumented using OpenTelemetry SDKs. This involves integrating the appropriate OpenTelemetry libraries into the application code to capture trace data, such as request paths, durations, and dependencies.
 
-2. **Enable Auto-Instrumentation (Optional)**: For languages and frameworks that support it, auto-instrumentation is enabled to automatically capture trace data without manual code modifications. This approach simplifies the instrumentation process and ensures consistent trace data collection across services.  
-3. **Deploy the OpenTelemetry Collector**: The OpenTelemetry Collector is deployed within the Kubernetes cluster to receive, process, and export trace data. It acts as a telemetry gateway, collecting traces from instrumented services and forwarding them to the tracing backend.  
-4. **Configure the Collector to Export Traces to Grafana Tempo**: The Collector is configured with exporters that send trace data to **Grafana Tempo**, our chosen tracing backend. This setup involves specifying the Tempo endpoint and ensuring that traces are transmitted securely and efficiently.  
+2. **Enable Auto-Instrumentation (Optional)**: For languages and frameworks that support it, auto-instrumentation is enabled to automatically capture trace data without manual code modifications. This approach simplifies the instrumentation process and ensures consistent trace data collection across services.
+3. **Deploy the OpenTelemetry Collector**: The OpenTelemetry Collector is deployed within the Kubernetes cluster to receive, process, and export trace data. It acts as a telemetry gateway, collecting traces from instrumented services and forwarding them to the tracing backend.
+4. **Configure the Collector to Export Traces to Grafana Tempo**: The Collector is configured with exporters that send trace data to **Grafana Tempo**, our chosen tracing backend. This setup involves specifying the Tempo endpoint and ensuring that traces are transmitted securely and efficiently.
 5. **Visualize Traces in Grafana**: Grafana is configured to connect to Grafana Tempo as a data source. This integration allows for the creation of dashboards that visualize trace data, enabling the monitoring of request flows, identification of performance bottlenecks, and analysis of service dependencies.
 
-	
-
-# **Setting up the PLG Stack** 
+# **Setting up the PLG Stack**
 
 ### **kube-prometheus-stack:**
 
@@ -183,7 +182,7 @@ alertmanager:
           resources:
             requests:
               storage: 5Gi
-          storageClassName: nfs-default 
+          storageClassName: nfs-default
 ```
 
 **5\. Install the `kube-prometheus-stack` Helm Chart:**
@@ -249,17 +248,16 @@ spec:
 ```
 
 **7\. Apply the Gateway API Resources and access the Grafana Dashboard**  
-	After applying the Gateway API resources, access the Grafana dashboard at `https://grafana.e4r.internal/grafana`. The default login credentials are:
+ After applying the Gateway API resources, access the Grafana dashboard at `https://grafana.e4r.internal/grafana`. The default login credentials are:
 
-**Username: `admin`**   
+**Username: `admin`**  
 **Password: `prom-operator`**
 
 ### **Grafana Tools:**
 
-	To install the Grafana tools with customized configurations, follow these steps
+    To install the Grafana tools with customized configurations, follow these steps
 
-**1\. Add the Grafana Helm Repository:**  
-	
+**1\. Add the Grafana Helm Repository:**
 
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -268,10 +266,10 @@ helm repo update
 
 **2\. Grafana Loki:**
 
-There are three different ways of deploying the Grafana Loki, they are 
+There are three different ways of deploying the Grafana Loki, they are
 
-1. Monolithic  
-2. Simple Scalable  
+1. Monolithic
+2. Simple Scalable
 3. Microservice
 
 ```
@@ -435,10 +433,10 @@ alloy:
 
 Alloy does these things in our case
 
-1. Define Loki Write Endpoint  
-2. Enable Kubernetes Pod Discovery  
-3. Configure Relabeling for Log Metadata  
-4. Define Log Source from Kubernetes Pods  
+1. Define Loki Write Endpoint
+2. Enable Kubernetes Pod Discovery
+3. Configure Relabeling for Log Metadata
+4. Define Log Source from Kubernetes Pods
 5. Process Logs Before Writing
 
 In order to easily configure the alloy with various components Grafana Alloy has a open source tool, [https://grafana.github.io/alloy-configurator/](https://grafana.github.io/alloy-configurator/) **\[ Alloy Configurator \]**
@@ -449,7 +447,7 @@ Now, we install the Grafana alloy with these values in the monitoring namespace.
 helm install alloy grafana/alloy -n monitoring -f values.yaml
 ```
 
- Grafana Alloy also provides a UI dashboard which should look like this and helps to verify if it’s configured properly.
+Grafana Alloy also provides a UI dashboard which should look like this and helps to verify if it’s configured properly.
 
 ![image3](./assets/images/image_3.png)
 
@@ -459,7 +457,7 @@ Grafana Tempo can be installed using Helm, and tracing information can then be p
 
 We need to install Grafana Tempo and update the values of Grafana Alloy to enable the capture of traces from services and write them to Tempo. Afterward, we must add Grafana Tempo as a data source in the Grafana dashboard.
 
-**Installing Grafana Tempo** 
+**Installing Grafana Tempo**
 
 ```
 helm install tempo grafana/tempo -n monitoring -f tempo-values.yaml
@@ -521,59 +519,59 @@ In the current implementation, logs can be automatically populated with the help
 **Test App for Metrics**
 
 ```javascript
-const express = require('express');
-const http = require('http');
-const promClient = require('prom-client');
+const express = require("express");
+const http = require("http");
+const promClient = require("prom-client");
 
 const collectDefaultMetrics = promClient.collectDefaultMetrics;
 collectDefaultMetrics({ register: promClient.register });
 
 const apiHits = new promClient.Counter({
-    name: 'api_hits',
-    help: 'Number of hits to the API',
+  name: "api_hits",
+  help: "Number of hits to the API",
 });
 const httpRequests = new promClient.Counter({
-    name: 'http_requests',
-    help: 'Number of HTTP requests',
-    labelNames: ['route','method', 'status'],
+  name: "http_requests",
+  help: "Number of HTTP requests",
+  labelNames: ["route", "method", "status"],
 });
 
 const app = express();
 const server = http.createServer(app);
 server.listen(3000, () => {
-    console.log('Server is running on port 3000');
+  console.log("Server is running on port 3000");
 });
 
-app.get('/fast', (_, res) => {
-    apiHits.inc();
-    httpRequests.inc({ route: '/fast', method: 'GET', status: 200 });
-    try{
-        console.log('This is a fast request hit!');
-        res.send('This is a fast request!');
-    } catch (error) {
-        logger.error('An error occurred!');
-        res.status(500).send('An error occurred!');
-    }
+app.get("/fast", (_, res) => {
+  apiHits.inc();
+  httpRequests.inc({ route: "/fast", method: "GET", status: 200 });
+  try {
+    console.log("This is a fast request hit!");
+    res.send("This is a fast request!");
+  } catch (error) {
+    logger.error("An error occurred!");
+    res.status(500).send("An error occurred!");
+  }
 });
 
-app.get('/slow', async(_, res) => {
-    apiHits.inc();
-    httpRequests.inc({ route: '/slow', method: 'GET', status: 200 });
-    try {
-        console.log('This is a slow request hit!');
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        res.send('This is a slow request!');
-    } catch (error) {
-        logger.error('An error occurred!');
-        res.status(500).send('An error occurred!');
-    }
+app.get("/slow", async (_, res) => {
+  apiHits.inc();
+  httpRequests.inc({ route: "/slow", method: "GET", status: 200 });
+  try {
+    console.log("This is a slow request hit!");
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    res.send("This is a slow request!");
+  } catch (error) {
+    logger.error("An error occurred!");
+    res.status(500).send("An error occurred!");
+  }
 });
 
-app.get('/metrics', async(_, res) => {
-    console.log('This is a metrics request hit!');
-    const metrics = await promClient.register.metrics();
-    res.setHeader('Content-Type', promClient.register.contentType);
-    res.send(metrics);
+app.get("/metrics", async (_, res) => {
+  console.log("This is a metrics request hit!");
+  const metrics = await promClient.register.metrics();
+  res.setHeader("Content-Type", promClient.register.contentType);
+  res.send(metrics);
 });
 ```
 
@@ -681,9 +679,9 @@ if __name__ == "__main__":
 
 # **Official Docs and Helm Charts**
 
-- [https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)  
-- [https://github.com/grafana/helm-charts/](https://github.com/grafana/helm-charts/)  
-- [https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector)  
-- [https://grafana.com/docs/tempo/latest/getting-started/](https://grafana.com/docs/tempo/latest/getting-started/)  
-- [https://grafana.com/docs/alloy/latest/](https://grafana.com/docs/alloy/latest/)  
+- [https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+- [https://github.com/grafana/helm-charts/](https://github.com/grafana/helm-charts/)
+- [https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector)
+- [https://grafana.com/docs/tempo/latest/getting-started/](https://grafana.com/docs/tempo/latest/getting-started/)
+- [https://grafana.com/docs/alloy/latest/](https://grafana.com/docs/alloy/latest/)
 - [https://grafana.com/docs/loki/latest/](https://grafana.com/docs/loki/latest/)
