@@ -267,9 +267,7 @@ spec:
 ```
 ---
 ### STEP 4: Create a Gateway for Harbor and attach the GatewayClass created in STEP 1.
-```
-# A second Gateway exposing Harbor services, similar to the Canfar Gateway.
-
+```yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -304,9 +302,7 @@ spec:
 ```
 ---
 ### STEP 5: Create an HTTPRoute for the services in Harbor and attach it to the Gateway created in STEP 4.
-```
-# Similar to the Canfar HTTPRoute, this defines routing rules for Harbor services.
-
+```yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
