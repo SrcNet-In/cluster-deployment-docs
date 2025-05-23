@@ -14,6 +14,8 @@ This stack offers the following features:
 
 4. **Performent and Easy to Maintenance**: In addition to its ease of use, the PLG stack offers high performance and low resource consumption, making it a better fit.
 
+---
+
 ### **List of Tools**
 
 1. Grafana
@@ -23,29 +25,43 @@ This stack offers the following features:
 5. Tempo
 6. OpenTelemetry Collector
 
+---
+
 ### **Grafana**
 
 Grafana is an open-source tool used to create visual dashboards for monitoring and analyzing data. It connects to various data sources like Prometheus, Loki and helps you to visualize metrics in real-time. Grafana makes it easy to track performance and identify issues with interactive charts and graphs.
+
+---
 
 ### **Prometheus**
 
 Prometheus is a monitoring and alerting toolkit designed for Kubernetes and cloud-native environments. It collects and stores metrics (data on system performance) over time. Prometheus automatically scrapes data from your services and stores it in a time-series database.
 
+---
+
 ### **Grafana Loki**
 
 Loki is a log aggregation system designed for cloud-native environments, particularly Kubernetes. It efficiently collects, stores, and indexes logs from applications and services. Unlike traditional logging systems, Loki indexes logs by labels (such as application name, pod, or container), rather than the full content of each log line. This approach significantly reduces storage requirements and makes querying faster and more cost-effective.
+
+---
 
 ### **Grafana Alloy**
 
 Grafana Alloy is an open-source distribution of the OpenTelemetry Collector, designed to streamline the collection, processing, and export of telemetry data—including metrics, logs, traces, and profiles—in environments like Kubernetes. It offers native support for both OpenTelemetry and Prometheus telemetry formats.
 
+---
+
 ### **Grafana Tempo**
 
 Grafana Tempo is an open-source, high-scale distributed tracing backend. It enables efficient collection, storage, and analysis of trace data, providing valuable insights into the performance and reliability of distributed systems and it integrates nicely with grafana loki for logs and prometheus for metrics
 
+---
+
 ### **OpenTelemetry Collector**
 
 The OpenTelemetry Collector is a vendor-agnostic tool designed to receive, process, and export telemetry data such as metrics, logs, and traces. When deployed within Kubernetes clusters, it enhances observability by collecting and managing telemetry data from various sources.
+
+---
 
 # **System Requirements**
 
@@ -66,6 +82,8 @@ To set up the observability stack for SRCNodes, which includes Grafana, Promethe
 
 **Helm:** v3.x (or later)
 
+---
+
 # **Architecture Overview**
 
 ![Image 1](./assets/images/image_1.png)
@@ -82,6 +100,8 @@ The observability stack fullfills three requirments:
 - **Log Aggregation**: Logs are gathered by **Loki** and displayed in **Grafana**.
 - **Distributed Tracing**: Traces are collected from **Tempo** and rendered in **Grafana**.
 
+---
+
 ### **Metrics Collection**
 
 To capture metrics from services into Prometheus, there are several approaches. One method used in this architecture is **Prometheus client integration**.
@@ -95,6 +115,8 @@ The process involves the following steps:
 
 With this setup, Prometheus continuously scrapes the metrics from the service, and Grafana allows for real-time visualization of the data.
 
+---
+
 ### **Logs Aggregation**
 
 To capture logs from services running within our Kubernetes cluster, we utilize **Grafana Alloy** in conjunction with **Loki** and **Grafana** for efficient log aggregation and visualization. The log collection and visualization process is as follows:
@@ -104,6 +126,8 @@ To capture logs from services running within our Kubernetes cluster, we utilize 
 3. **Forward Logs to Loki**: The collected logs are forwarded to **Loki**, a log aggregation system designed for scalability and efficiency. Alloy's loki.write component handles the delivery of logs to Loki endpoints.
 4. **Store Logs in Loki**: Loki stores the logs in an object storage system or persistent volume, ensuring durability and facilitating efficient querying.
 5. **Visualize Logs in Grafana**: **Grafana** is configured to use Loki as a data source. This setup allows for the creation of dynamic dashboards and the execution of queries to analyze and visualize log data in real-time.
+
+---
 
 ### **Distributed Tracing**
 
@@ -115,6 +139,8 @@ To implement distributed tracing within our Kubernetes environment, we utilize *
 3. **Deploy the OpenTelemetry Collector**: The OpenTelemetry Collector is deployed within the Kubernetes cluster to receive, process, and export trace data. It acts as a telemetry gateway, collecting traces from instrumented services and forwarding them to the tracing backend.
 4. **Configure the Collector to Export Traces to Grafana Tempo**: The Collector is configured with exporters that send trace data to **Grafana Tempo**, our chosen tracing backend. This setup involves specifying the Tempo endpoint and ensuring that traces are transmitted securely and efficiently.
 5. **Visualize Traces in Grafana**: Grafana is configured to connect to Grafana Tempo as a data source. This integration allows for the creation of dashboards that visualize trace data, enabling the monitoring of request flows, identification of performance bottlenecks, and analysis of service dependencies.
+
+---
 
 # **Setting up the PLG Stack**
 
@@ -252,6 +278,8 @@ spec:
 
 **Username: `admin`**  
 **Password: `prom-operator`**
+
+---
 
 ### **Grafana Tools:**
 
@@ -512,6 +540,8 @@ Also add the trace to logs and trace to metrics data sources, which can be Grafa
 
 ![image5](./assets/images/image_5.png)
 
+---
+
 # **Sample Service with Prometheus and OpenTelemetry SDK**
 
 In the current implementation, logs can be automatically populated with the help of Grafana Alloy. However, for metrics and tracing, we need to install and configure from the respective libraries. To avoid code-level changes, we considered alternatives such as auto-instrumentation for tracing and a sidecar approach, or other alternatives for metrics. For now, we have created two test services in FastAPI (Python) and NodeJs (Javascript) that have Prometheus and OpenTelemetry clients installed. These services will capture metrics and logs and send them to Prometheus and Tempo, respectively.
@@ -676,6 +706,8 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
+
+---
 
 # **Official Docs and Helm Charts**
 
